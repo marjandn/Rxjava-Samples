@@ -125,5 +125,39 @@ i suggest you to read this [article](https://medium.com/appunite-edu-collection/
 to fully understand the difference between these three operators
 
 
-
-
+## for() for first element
+for loop but break when first element pass filter block
+we used this for loop type before
+```
+ for (i in 0 until offList.size) {
+            if (offList[i].foodId == 2)
+                doSomeFunc(offList[i])
+        }
+```
+and now with (Rxjava operators)[http://reactivex.io/documentation/operators] it be like bellow
+```
+Observable.fromIterable(offList)
+                .filter{
+                    it.foodId == 2
+                }.firstElement()
+                .subscribe{
+                    doSomeFunc(it)
+                }
+```
+or even can set for in for  
+```
+ Observable.fromIterable(mList)
+                .filter{it ->
+                    baseFoods.contains(it)
+                }
+                .map{it ->
+                    Observable.fromIterable(baseFoods)
+                            .filter{bf->
+                                it.foodId == bf.foodId
+                            }
+                            .firstElement()
+                            .subscribe{bf ->
+                                doSomeFunc(bf)
+                            }
+                }.subscribe()
+```
