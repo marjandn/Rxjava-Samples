@@ -134,7 +134,7 @@ we used this for loop type before
                 doSomeFunc(offList[i])
         }
 ```
-and now with (Rxjava operators)[http://reactivex.io/documentation/operators] it be like bellow
+and now with [Rxjava operators](http://reactivex.io/documentation/operators) it be like bellow
 ```
 Observable.fromIterable(offList)
                 .filter{
