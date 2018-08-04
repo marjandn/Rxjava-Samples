@@ -161,3 +161,70 @@ or even can set for in for
                             }
                 }.subscribe()
 ```
+
+## CompositeDisposable 
+with this amazing Rxjava class you can canceled your RxJava request Each stage of the run. 
+for example i had an server request with Rxjava like bellow
+```
+ ServiceGenerator().getService().getSellerDetails()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(object : DisposableObserver<ResponsePacket>() {
+
+                    override fun onComplete() {
+                        log("get data complete...!!")
+                    }
+
+                    override fun onNext(t: ResponsePacket) {
+                        manageSellerDetailsResponse(t)
+                        dialog.dismiss()
+                    }
+
+                    override fun onError(e: Throwable) {
+                        log("getSellerDetails  $e")
+                    }
+
+                })
+```
+That worked very well but if the user stopped requesting it during the run, that mean call onDestroy() this activity that run Rxjava Request
+app crashes !! with this ugly error 
+
+" java.lang.IllegalStateException: Fatal Exception thrown on Scheduler."
+
+so we can solve this with CompositeDisposable class like bellow
+```
+val compositeDisposable = CompositeDisposable()
+
+  fun getSellerDetails(shop: Int) {
+        dialog.show()
+
+      compositeDisposable.add(
+        ServiceGenerator().getService().getSellerDetails(session.getUID(), session.getToken(), shop)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribeWith(object : DisposableObserver<ResponsePacket>() {
+
+                    override fun onComplete() {
+                        log("get data complete...!!")
+
+                        //get all Product Categories
+                        getSellerProdCat(shop)
+                    }
+
+                    override fun onNext(t: ResponsePacket) {
+                        manageSellerDetailsResponse(t)
+                        dialog.dismiss()
+                    }
+
+                    override fun onError(e: Throwable) {
+                        log("getSellerDetails  $e")
+                    }
+
+                }))
+     }
+     
+      override fun onDestroy() {
+        viewMode.compositeDisposable.clear()
+        super.onDestroy()
+    }
+```
