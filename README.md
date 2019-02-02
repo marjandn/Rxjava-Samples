@@ -228,3 +228,28 @@ val compositeDisposable = CompositeDisposable()
         super.onDestroy()
     }
 ```
+## simple example for login chain conditions
+
+```
+compositeDisposable.add(Observable.just(edt_mobile.text.toString())
+            .filter {
+                if (checkMobile(it))
+                    return@filter true
+                else {
+                    edt_mobile.error = getString(R.string.login01_error)
+                    return@filter false
+                }
+            }.map {
+                edt_password.text.toString()
+            }.filter {
+                if (it.isNotBlank() && it.length >= 4)
+                    return@filter true
+                else {
+                    edt_password.error = getString(R.string.login02_error)
+                    return@filter false
+                }
+            }.subscribe {
+                goLogin(edt_mobile.text.toString(), edt_password.text.toString())
+            }
+        )
+```
