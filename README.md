@@ -6,7 +6,11 @@ that i use untill now , so i very glad to with your recommendes,these samples wi
 
 
 ## TextWatcher
-we can use 
+(for use this option you should use follow dependency)
+``` 
+implementation "com.jakewharton.rxbinding3:rxbinding:$rxBinding"
+```
+of JakeWharton [repo](https://github.com/JakeWharton/RxBinding)
 ```
 RxTextView.afterTextChangeEvents(your_edittext_name)
                 .filter { t -> t.toString().length > 3 //some filter }
