@@ -13,11 +13,11 @@ implementation "com.jakewharton.rxbinding3:rxbinding:$rxBinding"
 of JakeWharton [repo](https://github.com/JakeWharton/RxBinding)
 ```
 RxTextView.afterTextChangeEvents(your_edittext_name)
-                .filter { t -> t.toString().length > 3 //some filter }
+                .filter { t -> t.getEditable().toString().length > 3 //some filter }
                 .subscribe { //do sth if filter has pass }
                 
 RxTextView.beforeTextChangeEvents(edt_new_pass)
-                .filter { t -> t.toString().length > 3 }
+                .filter { t -> t.getEditable().toString().length > 3 }
                 .subscribe { checkLayoutAccept() }
 ```
 instead
