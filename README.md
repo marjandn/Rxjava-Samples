@@ -257,3 +257,49 @@ compositeDisposable.add(Observable.just(edt_mobile.text.toString())
             }
         )
 ```
+
+## 1 minute reverse timer (useful for otp pages)
+```
+   Disposable disposable1 = Observable.interval(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .take(61)
+                .filter(aLong -> aLong > 0)
+                .map(aLong -> 60 - aLong)
+                .subscribe(aLong -> {
+                    if (aLong < 60 && aLong > 0) {
+                        String tim;
+                        if (aLong < 10)
+                            tim = "00:" + "0" + aLong.toString();
+                        else
+                            tim = "00:" + aLong.toString();
+                            
+                         Log.d("marjan",tim);
+                    } else{
+                        Log.d("marjan","marjan hoooooooray !!!!");
+                    }
+                });
+
+        getCompositeDisposable().add(disposable1);
+```
+
+## 1 minute timer
+```
+        Disposable disposable1 = Observable.interval(1, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .take(60)
+                .filter(aLong -> aLong > 0)
+                .subscribe(aLong -> {
+                   if (aLong <= 60) {
+                        String tim;
+                        if (aLong < 10)
+                            tim = "00:" + "0" + aLong.toString();
+                        else
+                            tim = "00:"+aLong.toString();
+
+                        getUtils().showLog(tim);
+                    } else
+                        getUtils().showLog("marjan hoooooooray !!!!");
+                });
+```
