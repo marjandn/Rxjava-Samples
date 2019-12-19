@@ -124,6 +124,12 @@ and in below sample i saved and deleted based on entered string
 
 ```
 
+also if you got "change ui in mainThread" error you should use debounce like bellow
+
+```
+   .debounce(1000, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+```
+
 ## FlatMap, SwitchMap and ConcatMap
 i suggest you to read this [article](https://medium.com/appunite-edu-collection/rxjava-flatmap-switchmap-and-concatmap-differences-examples-6d1f3ff88ee0)
 to fully understand the difference between these three operators
