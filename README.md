@@ -309,3 +309,22 @@ compositeDisposable.add(Observable.just(edt_mobile.text.toString())
                         getUtils().showLog("marjan hoooooooray !!!!");
                 });
 ```
+
+## Grouping the emissions by a specific key
+
+```
+val requestMatches = FootbalDataApiImp.getApi().getMatches()
+            //returning matches one by one from api response list
+            .flatMap { response -> Observable.fromIterable(response.matches) }
+            //group matches by their dates
+            .groupBy { match -> match.date }
+            .flatMapSingle{
+                //create a list with matches that have the same keys (in this example: same date)
+                it.toList()
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe{ matches ->
+                //do something
+            }
+```
