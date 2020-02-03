@@ -329,6 +329,18 @@ val requestMatches = FootbalDataApiImp.getApi().getMatches()
             }
 ```
 
+## Retry a failed network request after a few seconds
+```
+val disposable = NetworkService.getSomething()
+            //retry the failed request after 15 seconds
+            .retryWhen { it.delay(15, TimeUnit.SECONDS) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe{ data ->
+                //do something
+            }
+``` 
+
 ## Zip operator
 
 ```
