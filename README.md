@@ -328,3 +328,23 @@ val requestMatches = FootbalDataApiImp.getApi().getMatches()
                 //do something
             }
 ```
+
+## Zip operator
+
+```
+            //combine emission from two or more observables into a single observable with zip operator
+            val usersDisposable  = Observable.zip(
+                database.userDao().getUserById(user1_id),
+                database.userDao().getUserById(user2_id),
+                BiFunction { user1: User, user2: User ->
+                    //do something with the given users
+                    Pair(user1, user2) 
+                }
+            ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe{ userPair ->
+                    print(userPair.first)
+                    print(userPair.second)
+                    //do something
+                }
+```
