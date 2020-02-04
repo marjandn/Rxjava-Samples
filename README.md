@@ -309,3 +309,54 @@ compositeDisposable.add(Observable.just(edt_mobile.text.toString())
                         getUtils().showLog("marjan hoooooooray !!!!");
                 });
 ```
+
+## Grouping the emissions by a specific key
+
+```
+val requestMatches = FootbalDataApiImp.getApi().getMatches()
+            //returning matches one by one from api response list
+            .flatMap { response -> Observable.fromIterable(response.matches) }
+            //group matches by their dates
+            .groupBy { match -> match.date }
+            .flatMapSingle{
+                //create a list with matches that have the same keys (in this example: same date)
+                it.toList()
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe{ matches ->
+                //do something
+            }
+```
+
+## Retry a failed network request after a few seconds
+```
+val disposable = NetworkService.getSomething()
+            //retry the failed request after 15 seconds
+            .retryWhen { it.delay(15, TimeUnit.SECONDS) }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe{ data ->
+                //do something
+            }
+``` 
+
+## Zip operator
+
+```
+            //combine emission from two or more observables into a single observable with zip operator
+            val usersDisposable  = Observable.zip(
+                database.userDao().getUserById(user1_id),
+                database.userDao().getUserById(user2_id),
+                BiFunction { user1: User, user2: User ->
+                    //do something with the given users
+                    Pair(user1, user2) 
+                }
+            ).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe{ userPair ->
+                    print(userPair.first)
+                    print(userPair.second)
+                    //do something
+                }
+```
