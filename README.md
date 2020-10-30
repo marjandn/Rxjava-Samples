@@ -360,3 +360,37 @@ val disposable = NetworkService.getSomething()
                     //do something
                 }
 ```
+
+## Buffer operator and FromArray operator
+buffer():> Periodically gather items from an Observable into bundles and emit the bundles rather than emitting
+items one at a time. notice that order is maintained in the buffer() operator.
+fromArray():> Input: T[] / Output: Observable<T>.
+
+```
+           String[] strings = new String[]{"RxAndroid", "RxJava", "Git", "Android"};
+
+                   Observable<String> stringObservable = Observable
+                           .fromArray(strings)
+                           .subscribeOn(Schedulers.io());
+
+                   stringObservable
+                           .buffer(2)
+                           .observeOn(AndroidSchedulers.mainThread())
+                           .subscribe(new Observer<List<String>>() {
+                               @Override
+                               public void onSubscribe(Disposable d) {}
+
+                               @Override
+                               public void onNext(List<String> strings) {
+                                   Log.e(TAG, "onNext: results for bundle are:");
+                                   for(String string: strings){
+                                       Log.e(TAG, "onNext: " + string);
+                                   }
+                               }
+
+                               @Override
+                               public void onError(Throwable e) {}
+
+                               @Override
+                               public void onComplete() {}
+                           });
