@@ -394,3 +394,32 @@ fromArray():> Input: T[] / Output: Observable<T>.
                                @Override
                                public void onComplete() {}
                            });
+```
+
+## Distinct operator
+distinct():> The Distinct operator filters an Observable by only allowing items through that have not already been emitted.
+
+```
+               Observable<User> userObservable = Observable
+                           .fromIterable(DataSource.createUsersList())
+                           .distinct(new Function<User, String>() {
+                               @Override
+                               public String apply(User user) throws Exception {
+                                   return user.getName();
+                               }
+                           })
+                           .subscribeOn(Schedulers.io())
+                           .observeOn(AndroidSchedulers.mainThread());
+
+                   userObservable.subscribe(new Observer<User>() {
+                       @Override
+                       public void onSubscribe(Disposable d) {}
+                       @Override
+                       public void onNext(User user) {
+                           Log.e(TAG, "onNext: " + user.getName());
+                       }
+                       @Override
+                       public void onError(Throwable e) {}
+                       @Override
+                       public void onComplete() {}
+                   });
